@@ -1,0 +1,2 @@
+rootProject.name = "Torn Stocks"
+include ':app'
