@@ -60,6 +60,8 @@ public class MainActivity extends AppCompatActivity {
             Response response = StockRetrofitBuilder.getStockApi().getStocks(Credentials.API_KEY).execute();
             Log.d(TAG, "testResponse: Response code - " + response.code());
             if (response.code() == 200){
+                StockResponse sr = (StockResponse)response.body();
+                Log.d(TAG, "testResponse: Stockresponse: " + sr);
                 List<Stock> list = new ArrayList<>(((StockResponse)response.body()).getStocks());
                 Log.d(TAG, "testResponse: Stocks: " + list);
             }

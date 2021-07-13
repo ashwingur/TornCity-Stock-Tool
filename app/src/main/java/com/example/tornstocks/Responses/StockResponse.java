@@ -13,6 +13,7 @@ public class StockResponse {
     private Map<String, Stock> stockMap;
 
     public List<Stock> getStocks(){ return new ArrayList<>(stockMap.values()); }
+    public Map<String, Stock> getStockMap(){ return stockMap; }
 
     @Override
     public String toString() {
