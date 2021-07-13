@@ -63,7 +63,6 @@ public class StockApiClient {
                     if (sr.getStockMap() != null){
                         // Successful retrieval
                         List<Stock> list = new ArrayList<>(((StockResponse)response.body()).getStocks());
-                        Log.d(TAG, "testResponse: Stocks: " + list);
                         mStocks.postValue(list);
                     } else {
                         Log.d(TAG, "run: Stock Map was null");

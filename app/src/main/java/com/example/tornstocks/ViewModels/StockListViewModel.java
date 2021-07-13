@@ -18,7 +18,7 @@ public class StockListViewModel extends ViewModel {
 
     public LiveData<List<Stock>> getStocks(){ return stockRepository.getStocks(); }
 
-    public void queryStocks(String key){ stockRepository.queryStocks(key);}
+    public void queryStocks(String key){ stockRepository.queryStocks(key); }
 
 
 }
