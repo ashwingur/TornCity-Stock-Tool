@@ -15,7 +15,7 @@ public class StockRepository {
 
     private String key;
 
-    private StockRepository getInstance(){
+    public static StockRepository getInstance(){
         if (instance == null){
             instance = new StockRepository();
         }
