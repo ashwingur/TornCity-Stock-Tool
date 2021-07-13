@@ -21,8 +21,6 @@ public class Stock implements Parcelable {
     }
 
     // Getters
-
-
     public int getStock_id() { return stock_id; }
 
     public String getName() { return name; }
@@ -61,5 +59,15 @@ public class Stock implements Parcelable {
         dest.writeString(name);
         dest.writeString(acronym);
         dest.writeInt(current_price);
+    }
+
+    @Override
+    public String toString() {
+        return "Stock{" +
+                "stock_id=" + stock_id +
+                ", name='" + name + '\'' +
+                ", acronym='" + acronym + '\'' +
+                ", current_price=" + current_price +
+                '}';
     }
 }
