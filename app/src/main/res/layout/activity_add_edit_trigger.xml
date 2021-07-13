@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddEditTriggerActivity"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_edit_acronym"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="Acronym"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_edit_name"
+        android:layout_toRightOf="@id/add_edit_acronym"
+        android:layout_alignBottom="@id/add_edit_acronym"
+        android:layout_marginLeft="16dp"
+        android:text="Name"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_edit_current"
+        android:layout_below="@id/add_edit_acronym"
+        android:text="Current Price: "/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_height="wrap_content"
+        android:id="@+id/add_edit_current_price"
+        android:layout_toRightOf="@id/add_edit_current"
+        android:layout_alignTop="@id/add_edit_current"
+        android:text="0.00 "/>
+
+    <EditText
+        android:id="@+id/add_edit_trigger"
+        android:layout_marginTop="32dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/add_edit_current"
+        android:layout_centerHorizontal="true"
+        android:hint="Trigger Price"
+        android:inputType="number" />
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Create"
+        android:layout_below="@id/add_edit_trigger"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+
+</RelativeLayout>

@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -30,11 +31,14 @@ import retrofit2.Response;
 public class StockListActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
+    public static final int delay = 15000; // Delay between handler call in milliseconds
+    final Handler handler = new Handler();
 
     private StockListViewModel stockListViewModel;
 
     private RecyclerView recyclerView;
     private StockListAdapter mAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +51,9 @@ public class StockListActivity extends AppCompatActivity {
         setupObservers();
 
         initRecycler();
-        stockListViewModel.queryStocks(Credentials.API_KEY);
+        repeatStockQuery();
+        //stockListViewModel.queryStocks(Credentials.API_KEY);
+
 
     }
 
@@ -79,6 +85,18 @@ public class StockListActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void repeatStockQuery(){
+        stockListViewModel.queryStocks(Credentials.API_KEY);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                stockListViewModel.queryStocks(Credentials.API_KEY);
+                Toast.makeText(StockListActivity.this, "Update", Toast.LENGTH_LONG).show();
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
     }
 
 }
