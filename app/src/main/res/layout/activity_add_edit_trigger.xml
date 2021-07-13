@@ -54,6 +54,7 @@
         android:layout_height="wrap_content"
         android:text="Create"
         android:layout_below="@id/add_edit_trigger"
+        android:id="@+id/add_edit_button"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"/>
 

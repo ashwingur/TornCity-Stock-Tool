@@ -1,11 +1,16 @@
 package com.example.tornstocks;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -39,6 +44,8 @@ public class StockListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private StockListAdapter mAdapter;
 
+    private ActivityResultLauncher<Intent> launcher;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +56,9 @@ public class StockListActivity extends AppCompatActivity {
 
         stockListViewModel = new ViewModelProvider(this).get(StockListViewModel.class);
         setupObservers();
-
+        initLauncher();
         initRecycler();
         repeatStockQuery();
-        //stockListViewModel.queryStocks(Credentials.API_KEY);
-
 
     }
 
@@ -69,6 +74,11 @@ public class StockListActivity extends AppCompatActivity {
             @Override
             public void OnStockClick(Stock stock) {
                 Toast.makeText(StockListActivity.this, "Clicked on " + stock.getName(), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(StockListActivity.this, AddEditTriggerActivity.class);
+                intent.putExtra(AddEditTriggerActivity.MODE, AddEditTriggerActivity.CREATE_MODE);
+                Log.d(TAG, "OnStockClick: StockPrice = " + stock.getCurrent_price());
+                intent.putExtra(AddEditTriggerActivity.EXTRA_STOCK, stock);
+                launcher.launch(intent);
             }
         });
     }
@@ -79,10 +89,6 @@ public class StockListActivity extends AppCompatActivity {
             public void onChanged(List<Stock> stocks) {
                 Collections.sort(stocks, Stock.StockPriceComparator);
                 mAdapter.setStocks(stocks);
-                Log.d(TAG, "onChanged: Observed a change");
-                if (stocks != null){
-                    Log.d(TAG, "onChanged: Stocks are: " + stocks);
-                }
             }
         });
     }
@@ -93,10 +99,26 @@ public class StockListActivity extends AppCompatActivity {
             @Override
             public void run() {
                 stockListViewModel.queryStocks(Credentials.API_KEY);
-                Toast.makeText(StockListActivity.this, "Update", Toast.LENGTH_LONG).show();
                 handler.postDelayed(this, delay);
             }
         }, delay);
+    }
+
+    private void initLauncher(){
+        // Must come before initRecycler
+        launcher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+                        if (result.getResultCode() == AddEditTriggerActivity.CREATE_TRIGGER) {
+                            Toast.makeText(StockListActivity.this, "Trigger created", Toast.LENGTH_SHORT).show();
+                        } else if (result.getResultCode() == AddEditTriggerActivity.CANCEL_TRIGGER) {
+                            Toast.makeText(StockListActivity.this, "Trigger not saved", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(StockListActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                        }
+                    }});
     }
 
 }

@@ -35,7 +35,7 @@ public class Stock implements Parcelable {
         stock_id = in.readInt();
         name = in.readString();
         acronym = in.readString();
-        current_price = in.readInt();
+        current_price = in.readFloat();
     }
 
     public static Comparator<Stock> StockPriceComparator = new Comparator<Stock>() {
