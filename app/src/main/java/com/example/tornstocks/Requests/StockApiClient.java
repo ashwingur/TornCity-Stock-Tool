@@ -58,8 +58,10 @@ public class StockApiClient {
                 Response response = StockRetrofitBuilder.getStockApi().getStocks(key).execute();
                 Log.d(TAG, "run: Response code - " + response.code());
                 if (response.code() == 200){
+                    // Successful response
                     StockResponse sr = (StockResponse)response.body();
                     if (sr.getStockMap() != null){
+                        // Successful retrieval
                         List<Stock> list = new ArrayList<>(((StockResponse)response.body()).getStocks());
                         Log.d(TAG, "testResponse: Stocks: " + list);
                         mStocks.postValue(list);
