@@ -9,11 +9,11 @@ public class Stock implements Parcelable {
     private int stock_id;
     private String name;
     private String acronym;
-    private int current_price;
+    private float current_price;
     // Add more if required
 
 
-    public Stock(int stock_id, String name, String acronym, int current_price) {
+    public Stock(int stock_id, String name, String acronym, float current_price) {
         this.stock_id = stock_id;
         this.name = name;
         this.acronym = acronym;
@@ -27,7 +27,7 @@ public class Stock implements Parcelable {
 
     public String getAcronym() { return acronym; }
 
-    public int getCurrent_price() { return current_price; }
+    public float getCurrent_price() { return current_price; }
 
     protected Stock(Parcel in) {
         stock_id = in.readInt();
@@ -58,7 +58,7 @@ public class Stock implements Parcelable {
         dest.writeInt(stock_id);
         dest.writeString(name);
         dest.writeString(acronym);
-        dest.writeInt(current_price);
+        dest.writeFloat(current_price);
     }
 
     @Override
