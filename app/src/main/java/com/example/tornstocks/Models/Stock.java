@@ -3,6 +3,8 @@ package com.example.tornstocks.Models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Comparator;
+
 public class Stock implements Parcelable {
     // This class implements Parcelable so it can be sent through intent bundles
 
@@ -35,6 +37,13 @@ public class Stock implements Parcelable {
         acronym = in.readString();
         current_price = in.readInt();
     }
+
+    public static Comparator<Stock> StockPriceComparator = new Comparator<Stock>() {
+        @Override
+        public int compare(Stock s1, Stock s2) {
+            return (int) (s2.current_price - s1.current_price);
+        }
+    };
 
     public static final Creator<Stock> CREATOR = new Creator<Stock>() {
         @Override
