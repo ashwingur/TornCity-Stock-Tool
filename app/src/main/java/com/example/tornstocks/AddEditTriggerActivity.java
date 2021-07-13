@@ -1,14 +1,17 @@
 package com.example.tornstocks;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tornstocks.Models.Stock;
 
@@ -39,6 +42,8 @@ public class AddEditTriggerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_edit_trigger);
 
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_close);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
 
         triggerPriceEt = findViewById(R.id.add_edit_trigger);
         confirmButton = findViewById(R.id.add_edit_button);
@@ -66,5 +71,18 @@ public class AddEditTriggerActivity extends AppCompatActivity {
         }
 
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                Intent data = new Intent();
+                setResult(CANCEL_TRIGGER, data);
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

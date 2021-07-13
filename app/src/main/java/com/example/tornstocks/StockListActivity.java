@@ -73,10 +73,8 @@ public class StockListActivity extends AppCompatActivity {
         mAdapter.setOnStockClickListener(new StockListAdapter.OnStockClickListener() {
             @Override
             public void OnStockClick(Stock stock) {
-                Toast.makeText(StockListActivity.this, "Clicked on " + stock.getName(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(StockListActivity.this, AddEditTriggerActivity.class);
                 intent.putExtra(AddEditTriggerActivity.MODE, AddEditTriggerActivity.CREATE_MODE);
-                Log.d(TAG, "OnStockClick: StockPrice = " + stock.getCurrent_price());
                 intent.putExtra(AddEditTriggerActivity.EXTRA_STOCK, stock);
                 launcher.launch(intent);
             }
@@ -113,10 +111,8 @@ public class StockListActivity extends AppCompatActivity {
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == AddEditTriggerActivity.CREATE_TRIGGER) {
                             Toast.makeText(StockListActivity.this, "Trigger created", Toast.LENGTH_SHORT).show();
-                        } else if (result.getResultCode() == AddEditTriggerActivity.CANCEL_TRIGGER) {
-                            Toast.makeText(StockListActivity.this, "Trigger not saved", Toast.LENGTH_SHORT).show();
                         } else {
-                            Toast.makeText(StockListActivity.this, "Error", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(StockListActivity.this, "Trigger not saved", Toast.LENGTH_SHORT).show();
                         }
                     }});
     }

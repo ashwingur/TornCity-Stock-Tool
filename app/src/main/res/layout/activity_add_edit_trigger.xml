@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/add_edit_acronym"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="bottom"
         android:text="Acronym"/>
 
     <TextView
@@ -19,8 +20,9 @@
         android:layout_height="wrap_content"
         android:id="@+id/add_edit_name"
         android:layout_toRightOf="@id/add_edit_acronym"
-        android:layout_alignBottom="@id/add_edit_acronym"
+        android:layout_alignBaseline="@id/add_edit_acronym"
         android:layout_marginLeft="16dp"
+        android:gravity="bottom"
         android:text="Name"/>
     <TextView
         android:layout_width="wrap_content"
@@ -48,7 +50,8 @@
         android:layout_below="@id/add_edit_current"
         android:layout_centerHorizontal="true"
         android:hint="Trigger Price"
-        android:inputType="number" />
+        android:inputType="number"
+        android:gravity="center"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
