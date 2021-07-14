@@ -11,6 +11,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -25,6 +27,7 @@ import android.widget.Toast;
 import com.example.tornstocks.Adapters.StockListAdapter;
 import com.example.tornstocks.Models.Stock;
 import com.example.tornstocks.Repositories.TriggerRepository;
+import com.example.tornstocks.Service.Restarter;
 import com.example.tornstocks.Service.TriggerCheckerService;
 import com.example.tornstocks.Utils.Credentials;
 import com.example.tornstocks.ViewModels.StockListViewModel;
@@ -45,14 +48,20 @@ public class StockListActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> launcher;
 
+    Intent mServiceIntent;
+    private TriggerCheckerService mTriggerCheckerService;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_list);
 
-        Log.d(TAG, "onCreate: Created");
-        startService(new Intent(this, TriggerCheckerService.class));
+        mTriggerCheckerService = new TriggerCheckerService();
+        mServiceIntent = new Intent(this, mTriggerCheckerService.getClass());
+        if (!isMyServiceRunning(mTriggerCheckerService.getClass())) {
+            startService(mServiceIntent);
+        }
 
         setTitle("Stocks");
 
@@ -64,6 +73,30 @@ public class StockListActivity extends AppCompatActivity {
         initButton();
     }
 
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("Service status", "Running");
+                return true;
+            }
+        }
+        Log.i ("Service status", "Not running");
+        return false;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        stopService(mServiceIntent);
+        Log.i("Count", "STOPPING TIMER HERE");
+        mTriggerCheckerService.stopTimerTask();
+        Intent broadcastIntent = new Intent();
+        broadcastIntent.setAction("restartService");
+        broadcastIntent.setClass(this, Restarter.class);
+        this.sendBroadcast(broadcastIntent);
+        super.onDestroy();
+    }
 
     private void initRecycler(){
         recyclerView = findViewById(R.id.recycler_view_stocks);
