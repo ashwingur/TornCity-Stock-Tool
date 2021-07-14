@@ -16,12 +16,14 @@ public class Trigger implements Parcelable {
     private String acronym;
     private float trigger_price;
     private float creation_price;
+    private boolean is_above; // If true then trigger is above current price
 
     public Trigger(int stock_id, String acronym, float trigger_price, float creation_price) {
         this.stock_id = stock_id;
         this.acronym = acronym;
         this.trigger_price = trigger_price;
         this.creation_price = creation_price;
+        this.is_above = trigger_price > creation_price;
     }
 
     protected Trigger(Parcel in) {
@@ -30,6 +32,22 @@ public class Trigger implements Parcelable {
         acronym = in.readString();
         trigger_price = in.readFloat();
         creation_price = in.readFloat();
+        is_above = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(ID);
+        dest.writeInt(stock_id);
+        dest.writeString(acronym);
+        dest.writeFloat(trigger_price);
+        dest.writeFloat(creation_price);
+        dest.writeByte((byte) (is_above ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
     public static final Creator<Trigger> CREATOR = new Creator<Trigger>() {
@@ -48,9 +66,15 @@ public class Trigger implements Parcelable {
         this.ID = ID;
     }
 
-    public void setTrigger_price(float trigger_price) { this.trigger_price = trigger_price; }
+    public void setTrigger_price(float trigger_price) {
+        this.trigger_price = trigger_price;
+        this.is_above = trigger_price > creation_price;
+    }
 
-    public void setCreation_price(float creation_price) { this.creation_price = creation_price; }
+    public void setCreation_price(float creation_price) {
+        this.creation_price = creation_price;
+        this.is_above = trigger_price > creation_price;
+    }
 
     public int getID() {
         return ID;
@@ -72,6 +96,8 @@ public class Trigger implements Parcelable {
         return creation_price;
     }
 
+    public boolean isIs_above() { return is_above; }
+
     @Override
     public String toString() {
         return "Trigger{" +
@@ -80,20 +106,8 @@ public class Trigger implements Parcelable {
                 ", acronym='" + acronym + '\'' +
                 ", trigger_price=" + trigger_price +
                 ", creation_price=" + creation_price +
+                ", is_above=" + is_above +
                 '}';
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(ID);
-        dest.writeInt(stock_id);
-        dest.writeString(acronym);
-        dest.writeFloat(trigger_price);
-        dest.writeFloat(creation_price);
-    }
 }
