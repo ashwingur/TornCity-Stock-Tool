@@ -1,6 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="#F3F3F3"
+    app:cardCornerRadius="8dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginTop="12dp"
+    app:cardElevation="4dp"
+    android:layout_marginRight="8dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/trigger_list_item_trigger"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:fontFamily="serif"
+            android:text="$0.00"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#000000"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/trigger_list_item_acronym"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BAG"
+            android:layout_centerVertical="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/trigger_list_item_type"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/trigger_list_item_trigger"
+            android:text="Above"
+            android:layout_marginRight="8dp"
+            android:layout_centerVertical="true"
+            />
+    </RelativeLayout>
 
 </androidx.cardview.widget.CardView>
