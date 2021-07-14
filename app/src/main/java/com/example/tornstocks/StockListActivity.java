@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.example.tornstocks.Adapters.StockListAdapter;
 import com.example.tornstocks.Models.Stock;
 import com.example.tornstocks.Repositories.TriggerRepository;
+import com.example.tornstocks.Service.TriggerCheckerService;
 import com.example.tornstocks.Utils.Credentials;
 import com.example.tornstocks.ViewModels.StockListViewModel;
 
@@ -34,7 +35,7 @@ import java.util.List;
 public class StockListActivity extends AppCompatActivity {
 
     private static final String TAG = "MainActivity";
-    public static final int delay = 15000; // Delay between handler call in milliseconds
+    public static final int delay = 30000; // Delay between handler call in milliseconds
     final Handler handler = new Handler();
 
     private StockListViewModel stockListViewModel;
@@ -50,6 +51,9 @@ public class StockListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_stock_list);
 
+        Log.d(TAG, "onCreate: Created");
+        startService(new Intent(this, TriggerCheckerService.class));
+
         setTitle("Stocks");
 
         stockListViewModel = new ViewModelProvider(this).get(StockListViewModel.class);
@@ -58,7 +62,6 @@ public class StockListActivity extends AppCompatActivity {
         initRecycler();
         repeatStockQuery();
         initButton();
-
     }
 
 
