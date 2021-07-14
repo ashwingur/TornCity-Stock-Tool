@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.TornStocks">
-        <activity android:name=".TriggerListActivity"></activity>
+        <activity android:name=".TriggerListActivity"
+            android:parentActivityName=".StockListActivity"></activity>
         <activity android:name=".AddEditTriggerActivity" />
         <activity android:name=".StockListActivity">
             <intent-filter>

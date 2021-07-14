@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -13,13 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.tornstocks.Adapters.StockListAdapter;
 import com.example.tornstocks.Adapters.TriggerListAdapter;
-import com.example.tornstocks.Models.Stock;
 import com.example.tornstocks.Models.Trigger;
 import com.example.tornstocks.Repositories.StockRepository;
 import com.example.tornstocks.Repositories.TriggerRepository;
@@ -44,15 +44,9 @@ public class TriggerListActivity extends AppCompatActivity {
 
         triggerListViewModel = new ViewModelProvider(this).get(TriggerListViewModel.class);
 
-        Button btn = findViewById(R.id.button_test);
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: " + triggerListViewModel.getTriggers().getValue());
-            }
-        });
-
         setTitle("Stock Triggers");
+
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
         initLauncher();
         initRecycler();
@@ -60,7 +54,7 @@ public class TriggerListActivity extends AppCompatActivity {
     }
 
     private void initRecycler() {
-        recyclerView = findViewById(R.id.recyler_view_triggers);
+        recyclerView = findViewById(R.id.recycler_view_triggers);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setHasFixedSize(true);
         mAdapter = new TriggerListAdapter();
@@ -105,4 +99,5 @@ public class TriggerListActivity extends AppCompatActivity {
                         Log.d(TAG, "onActivityResult: " + r.getAllTriggers().getValue());
                     }});
     }
+
 }

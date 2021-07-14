@@ -4,6 +4,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -14,6 +15,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -21,18 +25,11 @@ import android.widget.Toast;
 import com.example.tornstocks.Adapters.StockListAdapter;
 import com.example.tornstocks.Models.Stock;
 import com.example.tornstocks.Repositories.TriggerRepository;
-import com.example.tornstocks.Requests.StockRetrofitBuilder;
-import com.example.tornstocks.Responses.StockResponse;
 import com.example.tornstocks.Utils.Credentials;
 import com.example.tornstocks.ViewModels.StockListViewModel;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import retrofit2.Response;
 
 public class StockListActivity extends AppCompatActivity {
 
@@ -51,24 +48,16 @@ public class StockListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_stock_list);
 
         setTitle("Stocks");
-
-        Button b = findViewById(R.id.trigger_list_button);
-        b.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(StockListActivity.this, TriggerListActivity.class);
-                startActivity(intent);
-            }
-        });
 
         stockListViewModel = new ViewModelProvider(this).get(StockListViewModel.class);
         setupObservers();
         initLauncher();
         initRecycler();
         repeatStockQuery();
+        initButton();
 
     }
 
@@ -127,6 +116,35 @@ public class StockListActivity extends AppCompatActivity {
                         TriggerRepository r = new TriggerRepository(getApplication());
                         Log.d(TAG, "onActivityResult: " + r.getAllTriggers().getValue());
                     }});
+    }
+
+    private void initButton(){
+        Button b = findViewById(R.id.trigger_list_button);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StockListActivity.this, TriggerListActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.add_api_key:
+                Toast.makeText(this, "Custom API has not been implemented yet", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }
