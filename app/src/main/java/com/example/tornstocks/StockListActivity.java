@@ -142,6 +142,9 @@ public class StockListActivity extends AppCompatActivity {
             case R.id.add_api_key:
                 Toast.makeText(this, "Custom API has not been implemented yet", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.about:
+            Toast.makeText(this, "About has not been implemented yet", Toast.LENGTH_SHORT).show();
+            return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
