@@ -1,6 +1,7 @@
 package com.example.tornstocks.Repositories;
 
 import android.app.Application;
+import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 
@@ -13,6 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class TriggerRepository {
+    private static final String TAG = "TriggerRepository";
 
     private TriggerDao triggerDao;
     private LiveData<List<Trigger>> triggers;
@@ -37,9 +39,7 @@ public class TriggerRepository {
         executor.execute(new DeleteTriggerRunnable(trigger));
     }
 
-    public LiveData<List<Trigger>> getAllTriggers(){
-        return triggers;
-    }
+    public LiveData<List<Trigger>> getAllTriggers(){ return triggers; }
 
     private class InsertTriggerRunnable implements Runnable{
         private Trigger trigger;

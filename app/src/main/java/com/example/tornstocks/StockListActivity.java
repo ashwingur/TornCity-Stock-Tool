@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.tornstocks.Adapters.StockListAdapter;
 import com.example.tornstocks.Models.Stock;
+import com.example.tornstocks.Repositories.TriggerRepository;
 import com.example.tornstocks.Requests.StockRetrofitBuilder;
 import com.example.tornstocks.Responses.StockResponse;
 import com.example.tornstocks.Utils.Credentials;
@@ -53,6 +54,15 @@ public class StockListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setTitle("Stocks");
+
+        Button b = findViewById(R.id.trigger_list_button);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(StockListActivity.this, TriggerListActivity.class);
+                startActivity(intent);
+            }
+        });
 
         stockListViewModel = new ViewModelProvider(this).get(StockListViewModel.class);
         setupObservers();
@@ -110,10 +120,12 @@ public class StockListActivity extends AppCompatActivity {
                     @Override
                     public void onActivityResult(ActivityResult result) {
                         if (result.getResultCode() == AddEditTriggerActivity.CREATE_TRIGGER) {
-                            Toast.makeText(StockListActivity.this, "Trigger created", Toast.LENGTH_SHORT).show();
+                            // Insert something here if required
                         } else {
                             Toast.makeText(StockListActivity.this, "Trigger not saved", Toast.LENGTH_SHORT).show();
                         }
+                        TriggerRepository r = new TriggerRepository(getApplication());
+                        Log.d(TAG, "onActivityResult: " + r.getAllTriggers().getValue());
                     }});
     }
 

@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.example.tornstocks.Models.Trigger;
 
-@Database(entities = {Trigger.class}, version = 1)
+@Database(entities = {Trigger.class}, version = 1, exportSchema = false)
 public abstract class TriggerDatabase extends RoomDatabase {
 
     private static TriggerDatabase instance;

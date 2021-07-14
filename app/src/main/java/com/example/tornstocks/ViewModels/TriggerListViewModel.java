@@ -11,11 +11,11 @@ import com.example.tornstocks.Repositories.TriggerRepository;
 
 import java.util.List;
 
-public class TriggerViewModel extends AndroidViewModel {
+public class TriggerListViewModel extends AndroidViewModel {
     private TriggerRepository triggerRepository;
     private LiveData<List<Trigger>> triggers;
 
-    public TriggerViewModel(@NonNull Application application) {
+    public TriggerListViewModel(@NonNull Application application) {
         super(application);
         triggerRepository = new TriggerRepository(application);
         triggers = triggerRepository.getAllTriggers();
