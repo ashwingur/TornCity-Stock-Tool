@@ -76,6 +76,10 @@ public class Trigger implements Parcelable {
         this.is_above = trigger_price > creation_price;
     }
 
+    public void setIs_above(boolean is_above) {
+        this.is_above = is_above;
+    }
+
     public int getID() {
         return ID;
     }

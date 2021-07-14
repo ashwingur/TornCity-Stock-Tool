@@ -20,14 +20,5 @@ public class StockListViewModel extends ViewModel {
 
     public void queryStocks(String key){ stockRepository.queryStocks(key); }
 
-    public Stock getStockById(int stock_id){
-        for (Stock s: getStocks().getValue()){
-            if (s.getStock_id() == stock_id){
-                return s;
-            }
-        }
-        return null;
-    }
-
 
 }

@@ -43,6 +43,11 @@ public class TriggerListAdapter extends RecyclerView.Adapter<TriggerListAdapter.
         return triggers.size();
     }
 
+    public void setTriggers(List<Trigger> triggers) {
+        this.triggers = triggers;
+        notifyDataSetChanged();
+    }
+
     public class TriggerHolder extends RecyclerView.ViewHolder {
 
         private TextView acronym, trigger_price, type;

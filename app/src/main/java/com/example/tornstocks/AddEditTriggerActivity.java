@@ -64,6 +64,7 @@ public class AddEditTriggerActivity extends AppCompatActivity {
             mode = intent.getIntExtra(MODE, -1);
             if (mode == EDIT_MODE){
                 setTitle("Edit Trigger");
+                confirmButton.setText("Edit");
                 trigger = intent.getParcelableExtra(EXTRA_TRIGGER);
                 triggerPriceEt.setText(String.valueOf(trigger.getTrigger_price()));
             } else if (mode == CREATE_MODE){
