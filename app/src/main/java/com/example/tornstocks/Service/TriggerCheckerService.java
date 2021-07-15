@@ -15,6 +15,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -35,8 +36,8 @@ import java.util.TimerTask;
 
 public class TriggerCheckerService extends Service {
     private static final String TAG = "TriggerCheckerService";
-    public int counter=0;
-    public static final int delay = 1000 * 10;
+    public int counter = 5;
+    public static final int delay = 1000 * 60;
     private Handler handler = new Handler();
     private TriggerRepository triggerRepository;
     private List<Trigger> currentTriggers = new ArrayList<>();
@@ -60,27 +61,29 @@ public class TriggerCheckerService extends Service {
                     for (Stock s : currentStocks){
                         if (t.getStock_id() == s.getStock_id()) {
                             if (t.isIs_above() && (s.getCurrent_price() > t.getTrigger_price())){
+                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),counter++);
                                 Log.d(TAG, t + "ABOVE TRIGGER HIT");
-                                player.start();
                                 triggerRepository.delete(t);
-                                currentTriggers = null;
+                                triggersChanged = true;
+                                handler.postDelayed(this, delay);
+                                return;
                             } else if (!t.isIs_above() && (s.getCurrent_price() < t.getTrigger_price())){
+                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),counter++);
                                 Log.d(TAG, t + "BELOW TRIGGER HIT");
-                                player.start();
                                 triggerRepository.delete(t);
-                                currentTriggers = null;
+                                triggersChanged = true;
+                                handler.postDelayed(this, delay);
+                                return;
                             }
                             break;
                         }
                     }
                 }
             }
-            showNotification(TriggerCheckerService.this, "Title", "This is a message", new Intent(getApplicationContext(), StockListActivity.class),1);
-            //Log.d(TAG, "run: " + triggerRepository.getAllTriggersNonLive());
             handler.postDelayed(this, delay);
+            Toast.makeText(TriggerCheckerService.this, String.valueOf(counter++), Toast.LENGTH_SHORT).show();
         }
     };
-    private MediaPlayer player;
 
     public void showNotification(Context context, String title, String message, Intent intent, int reqCode) {
 
@@ -93,15 +96,15 @@ public class TriggerCheckerService extends Service {
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);
+        notificationBuilder.setVibrate(new long[]{0, 1000, 200, 1000});
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Channel Name";// The user-visible name of the channel.
+            CharSequence name = "Stock Trigger Alert";// The user-visible name of the channel.
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             notificationManager.createNotificationChannel(mChannel);
         }
         notificationManager.notify(reqCode, notificationBuilder.build()); // 0 is the request code, it should be unique id
-
         Log.d("showNotification", "showNotification: " + reqCode);
     }
 
@@ -159,8 +162,6 @@ public class TriggerCheckerService extends Service {
         broadcastIntent.setClass(this, Restarter.class);
         this.sendBroadcast(broadcastIntent);
     }
-
-
 
     private Timer timer;
     private TimerTask timerTask;
