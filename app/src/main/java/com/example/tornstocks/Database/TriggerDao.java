@@ -27,4 +27,7 @@ public interface TriggerDao {
 
     @Query("SELECT * FROM trigger_table ORDER BY acronym ASC")
     LiveData<List<Trigger>> getAllTriggers();
+
+    @Query("SELECT * FROM trigger_table")
+    List<Trigger> getAllTriggersNonLive();
 }

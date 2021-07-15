@@ -18,6 +18,7 @@ public class TriggerRepository {
 
     private TriggerDao triggerDao;
     private LiveData<List<Trigger>> triggers;
+    private List<Trigger> nonLiveTriggers;
 
     public TriggerRepository(Application application){
         triggerDao = TriggerDatabase.getInstance(application).triggerDao();
@@ -40,6 +41,12 @@ public class TriggerRepository {
     }
 
     public LiveData<List<Trigger>> getAllTriggers(){ return triggers; }
+
+    public List<Trigger> getAllTriggersNonLive(){
+        ExecutorService executor = Executors.newSingleThreadExecutor();
+        executor.execute(new GetNonLiveTriggersRunnable());
+        return nonLiveTriggers;
+    }
 
     private class InsertTriggerRunnable implements Runnable{
         private Trigger trigger;
@@ -72,5 +79,10 @@ public class TriggerRepository {
 
         @Override
         public void run() { triggerDao.delete(trigger); }
+    }
+
+    private class GetNonLiveTriggersRunnable implements Runnable{
+        @Override
+        public void run() { nonLiveTriggers = triggerDao.getAllTriggersNonLive(); }
     }
 }

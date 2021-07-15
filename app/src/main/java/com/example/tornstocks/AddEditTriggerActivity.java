@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.example.tornstocks.Models.Stock;
 import com.example.tornstocks.Models.Trigger;
 import com.example.tornstocks.Repositories.TriggerRepository;
+import com.example.tornstocks.Service.TriggerCheckerService;
 
 public class AddEditTriggerActivity extends AppCompatActivity {
     private static final String TAG = "AddEditTriggerActivity";
@@ -108,6 +109,7 @@ public class AddEditTriggerActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Error in trigger operation", Toast.LENGTH_SHORT).show();
         }
+        TriggerCheckerService.triggersChanged = true;
         finish();
     }
 
