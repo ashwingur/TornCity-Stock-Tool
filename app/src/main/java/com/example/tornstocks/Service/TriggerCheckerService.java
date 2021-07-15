@@ -168,7 +168,6 @@ public class TriggerCheckerService extends Service {
     public void startTimer() {
         Log.i("Count", "START TIMER");
         handler.removeCallbacks(runnable);
-        player = MediaPlayer.create(this, Settings.System.DEFAULT_NOTIFICATION_URI);
         handler.postDelayed(runnable , delay);
     }
 
