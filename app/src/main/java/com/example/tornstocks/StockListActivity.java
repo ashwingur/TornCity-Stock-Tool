@@ -5,7 +5,6 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -60,13 +59,14 @@ public class StockListActivity extends AppCompatActivity {
 
         mTriggerCheckerService = new TriggerCheckerService();
         mServiceIntent = new Intent(this, mTriggerCheckerService.getClass());
-        if (!isMyServiceRunning(mTriggerCheckerService.getClass())) {
+        if (!isTriggerCheckerServiceRunning(mTriggerCheckerService.getClass())) {
             startService(mServiceIntent);
         }
 
         setTitle("Stocks");
 
         stockListViewModel = new ViewModelProvider(this).get(StockListViewModel.class);
+
         setupObservers();
         initLauncher();
         initRecycler();
@@ -74,7 +74,8 @@ public class StockListActivity extends AppCompatActivity {
         initButton();
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
+    private boolean isTriggerCheckerServiceRunning(Class<?> serviceClass) {
+        // If the trigger checker service is no longer running, then return false
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
@@ -177,7 +178,8 @@ public class StockListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
             case R.id.add_api_key:
-                Toast.makeText(this, "Custom API has not been implemented yet", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(StockListActivity.this, ApiKeyActivity.class);
+                startActivity(intent);
                 return true;
             case R.id.about:
             Toast.makeText(this, "About has not been implemented yet", Toast.LENGTH_SHORT).show();
