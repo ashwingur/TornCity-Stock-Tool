@@ -8,6 +8,7 @@ import androidx.lifecycle.LiveData;
 import com.example.tornstocks.Database.TriggerDao;
 import com.example.tornstocks.Database.TriggerDatabase;
 import com.example.tornstocks.Models.Trigger;
+import com.example.tornstocks.Service.TriggerCheckerService;
 
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -28,16 +29,19 @@ public class TriggerRepository {
     public void insert(Trigger trigger){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new InsertTriggerRunnable(trigger));
+        TriggerCheckerService.triggersChanged = true;
     }
 
     public void update(Trigger trigger){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new UpdateTriggerRunnable(trigger));
+        TriggerCheckerService.triggersChanged = true;
     }
 
     public void delete(Trigger trigger){
         ExecutorService executor = Executors.newSingleThreadExecutor();
         executor.execute(new DeleteTriggerRunnable(trigger));
+        TriggerCheckerService.triggersChanged = true;
     }
 
     public LiveData<List<Trigger>> getAllTriggers(){ return triggers; }

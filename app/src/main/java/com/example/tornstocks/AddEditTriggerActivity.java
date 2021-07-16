@@ -109,7 +109,6 @@ public class AddEditTriggerActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Error in trigger operation", Toast.LENGTH_SHORT).show();
         }
-        TriggerCheckerService.triggersChanged = true;
         finish();
     }
 

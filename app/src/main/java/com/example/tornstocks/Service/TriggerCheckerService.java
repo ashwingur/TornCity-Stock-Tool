@@ -36,7 +36,7 @@ import java.util.TimerTask;
 
 public class TriggerCheckerService extends Service {
     private static final String TAG = "TriggerCheckerService";
-    public int counter = 5;
+    private int reqCodeCounter = 1;
     public static final int delay = 1000 * 60;
     private Handler handler = new Handler();
     private TriggerRepository triggerRepository;
@@ -48,6 +48,7 @@ public class TriggerCheckerService extends Service {
     private Runnable runnable = new Runnable() {
         @Override
         public void run() {
+            // If currentTriggers has not yet been fetched, or it has been updated
             if (currentTriggers == null || triggersChanged){
                 Log.d(TAG, "run: CHANGED");
                 currentTriggers = triggerRepository.getAllTriggersNonLive();
@@ -61,14 +62,14 @@ public class TriggerCheckerService extends Service {
                     for (Stock s : currentStocks){
                         if (t.getStock_id() == s.getStock_id()) {
                             if (t.isIs_above() && (s.getCurrent_price() > t.getTrigger_price())){
-                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),counter++);
+                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 Log.d(TAG, t + "ABOVE TRIGGER HIT");
                                 triggerRepository.delete(t);
                                 triggersChanged = true;
                                 handler.postDelayed(this, delay);
                                 return;
                             } else if (!t.isIs_above() && (s.getCurrent_price() < t.getTrigger_price())){
-                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),counter++);
+                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 Log.d(TAG, t + "BELOW TRIGGER HIT");
                                 triggerRepository.delete(t);
                                 triggersChanged = true;
@@ -81,7 +82,7 @@ public class TriggerCheckerService extends Service {
                 }
             }
             handler.postDelayed(this, delay);
-            Toast.makeText(TriggerCheckerService.this, String.valueOf(counter++), Toast.LENGTH_SHORT).show();
+            Toast.makeText(TriggerCheckerService.this, String.valueOf(reqCodeCounter++), Toast.LENGTH_SHORT).show();
         }
     };
 
