@@ -17,3 +17,6 @@ Go to the menu bar to set your API key
 After entering a valid API key, you can now view all the stocks and create triggers for them by tapping on the corresponding stock. You can also view existing triggers and edit or delete them if required.
  
 <img src="https://user-images.githubusercontent.com/82872666/125929501-e3b47fdd-fb8a-4b0d-993d-5d43b8a650b5.gif" alt="Creating, editing and deleting triggers" width="250"/>
+
+## What is Torn City?
+Torn City is a massively multiplayer game with thousands of active players around the world. The aim of the game is to become the best. Earn the most money, own the biggest property, own the most successful company, drive the fastest car, lead the largest faction, have the most friends, complete the most missions, commit the most crime and be the strongest and hardest in Torn City.
