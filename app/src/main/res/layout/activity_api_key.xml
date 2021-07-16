@@ -29,7 +29,8 @@
         android:layout_marginHorizontal="32dp"
         android:id="@+id/api_key_et"
         android:gravity="center"
-        android:layout_centerInParent="true"/>
+        android:layout_centerInParent="true"
+        android:selectAllOnFocus="true"/>
 
     <Button
         android:layout_width="wrap_content"

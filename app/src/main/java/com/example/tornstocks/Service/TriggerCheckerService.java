@@ -64,20 +64,16 @@ public class TriggerCheckerService extends Service {
                 for (Trigger t : currentTriggers){
                     for (Stock s : currentStocks){
                         if (t.getStock_id() == s.getStock_id()) {
-                            if (t.isIs_above() && (s.getCurrent_price() > t.getTrigger_price())){
+                            if (t.isIs_above() && (s.getCurrent_price() >= t.getTrigger_price())){
                                 showNotification(TriggerCheckerService.this, "Torn Stocks"
                                         , String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price())
                                         , new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 triggerRepository.delete(t);
-                                handler.postDelayed(this, delay);
-                                return;
-                            } else if (!t.isIs_above() && (s.getCurrent_price() < t.getTrigger_price())){
+                            } else if (!t.isIs_above() && (s.getCurrent_price() <= t.getTrigger_price())){
                                 showNotification(TriggerCheckerService.this, "Torn Stocks"
                                         , String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price())
                                         , new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 triggerRepository.delete(t);
-                                handler.postDelayed(this, delay);
-                                return;
                             }
                             break;
                         }

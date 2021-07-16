@@ -178,13 +178,16 @@ public class StockListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
-            case R.id.add_api_key:
+            case R.id.add_api_key: {
                 Intent intent = new Intent(StockListActivity.this, ApiKeyActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.about:
-            Toast.makeText(this, "About has not been implemented yet", Toast.LENGTH_SHORT).show();
-            return true;
+            }
+            case R.id.help: {
+                Intent intent = new Intent(StockListActivity.this, HelpActivity.class);
+                startActivity(intent);
+                return true;
+            }
             default:
                 return super.onOptionsItemSelected(item);
         }

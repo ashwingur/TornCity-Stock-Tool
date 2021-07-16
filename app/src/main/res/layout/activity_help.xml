@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HelpActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/how_to_use_tv"
+        android:text="How to use this tool"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="This tool can notify you when a stock has gone above or below a certain price. First you must enter your api key to see all the stocks. You can then click on a stock to create a trigger. You can also view existing triggers and click on one to edit it, or swipe right on it to delete it."
+        android:id="@+id/how_to_use_desc_tv"
+        android:layout_below="@id/how_to_use_tv"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/api_calls_tv"
+        android:text="Api Calls"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginVertical="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_below="@id/how_to_use_desc_tv"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="While the app is open, an api call is made every 30 seconds. The background service makes an api call every 60 seconds and then checks all triggers."
+        android:id="@+id/api_calls_desc_tv"
+        android:layout_below="@id/api_calls_tv"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:text="Made by UV1"
+        android:id="@+id/creator_tv"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        />
+
+
+
+</RelativeLayout>

@@ -6,7 +6,7 @@
         android:title="Api Key"
         app:showAsAction="never"/>
     <item
-        android:id="@+id/about"
-        android:title="About"
+        android:id="@+id/help"
+        android:title="Help"
         app:showAsAction="never"/>
 </menu>

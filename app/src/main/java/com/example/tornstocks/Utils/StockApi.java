@@ -8,8 +8,8 @@ import retrofit2.http.Query;
 
 public interface StockApi {
 
-    // Example of searching for stocks
-    // https://api.torn.com/torn/?selections=stocks&key=0QvdYr3CeeLjimul
+    // Example of querying for stock data
+    // https://api.torn.com/torn/?selections=stocks&key={API_KEY}
     @GET("/torn/?selections=stocks")
     Call<StockResponse> getStocks(
         @Query("key") String key
