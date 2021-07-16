@@ -86,11 +86,10 @@ public class StockListActivity extends AppCompatActivity {
         return false;
     }
 
-
     @Override
     protected void onDestroy() {
+        // The app has been closed and so on the main activity destroy, restart the TriggerCheckerService
         stopService(mServiceIntent);
-        Log.i("Count", "STOPPING TIMER HERE");
         mTriggerCheckerService.stopTimerTask();
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("restartService");

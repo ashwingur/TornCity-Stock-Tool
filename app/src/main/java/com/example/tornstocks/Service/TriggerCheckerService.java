@@ -36,8 +36,8 @@ import java.util.TimerTask;
 
 public class TriggerCheckerService extends Service {
     private static final String TAG = "TriggerCheckerService";
-    private int reqCodeCounter = 1;
-    public static final int delay = 1000 * 60;
+    private int reqCodeCounter = 3; // Start from 3 since foreground and myownforeground use channels 1,2
+    public static final int delay = 1000 * 60; // 60 seconds between checks since that is how often the stock updates
     private Handler handler = new Handler();
     private TriggerRepository triggerRepository;
     private List<Trigger> currentTriggers = new ArrayList<>();
@@ -54,25 +54,27 @@ public class TriggerCheckerService extends Service {
                 currentTriggers = triggerRepository.getAllTriggersNonLive();
                 triggersChanged = false;
             }
+            // Query the stocks API to get the latest stock data
             StockRepository.getInstance().queryStocks(Credentials.API_KEY);
             currentStocks = StockRepository.getInstance().getStocks().getValue();
-            Log.d(TAG, "TRIGGER: " + currentTriggers + " STOCKS " + currentStocks);
+
+            // Check if a trigger has been reached, if it has then delete it and send a notification.
             if (currentTriggers != null && currentStocks != null){
                 for (Trigger t : currentTriggers){
                     for (Stock s : currentStocks){
                         if (t.getStock_id() == s.getStock_id()) {
                             if (t.isIs_above() && (s.getCurrent_price() > t.getTrigger_price())){
-                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
-                                Log.d(TAG, t + "ABOVE TRIGGER HIT");
+                                showNotification(TriggerCheckerService.this, "Torn Stocks"
+                                        , String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price())
+                                        , new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 triggerRepository.delete(t);
-                                triggersChanged = true;
                                 handler.postDelayed(this, delay);
                                 return;
                             } else if (!t.isIs_above() && (s.getCurrent_price() < t.getTrigger_price())){
-                                showNotification(TriggerCheckerService.this, "Torn Stocks", String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price()), new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
-                                Log.d(TAG, t + "BELOW TRIGGER HIT");
+                                showNotification(TriggerCheckerService.this, "Torn Stocks"
+                                        , String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price())
+                                        , new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 triggerRepository.delete(t);
-                                triggersChanged = true;
                                 handler.postDelayed(this, delay);
                                 return;
                             }
@@ -81,15 +83,15 @@ public class TriggerCheckerService extends Service {
                     }
                 }
             }
+            // Repeat again after the delay
             handler.postDelayed(this, delay);
-            Toast.makeText(TriggerCheckerService.this, String.valueOf(reqCodeCounter++), Toast.LENGTH_SHORT).show();
         }
     };
 
     public void showNotification(Context context, String title, String message, Intent intent, int reqCode) {
-
+        // This method sends a notification to the user
         PendingIntent pendingIntent = PendingIntent.getActivity(context, reqCode, intent, PendingIntent.FLAG_ONE_SHOT);
-        String CHANNEL_ID = "channel_name";// The id of the channel.
+        String CHANNEL_ID = "Trigger Alert";// The id of the channel.
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher_round)
                 .setContentTitle(title)
@@ -97,9 +99,10 @@ public class TriggerCheckerService extends Service {
                 .setAutoCancel(true)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setContentIntent(pendingIntent);
-        notificationBuilder.setVibrate(new long[]{0, 1000, 200, 1000});
+        notificationBuilder.setVibrate(new long[]{0, 500, 200, 500, 200, 1000}); // Vibrate pattern [delay, vibrate, delay, vibrate...]
         NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // For build versions greater than oreo we must create a notification channel as well
             CharSequence name = "Stock Trigger Alert";// The user-visible name of the channel.
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel mChannel = new NotificationChannel(CHANNEL_ID, name, importance);
@@ -118,14 +121,14 @@ public class TriggerCheckerService extends Service {
             startForeground(1, new Notification());
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @RequiresApi(Build.VERSION_CODES.O) // Build versions Oreo or higher
     private void startMyOwnForeground()
     {
         String NOTIFICATION_CHANNEL_ID = "example.permanence";
         String channelName = "Background Service";
         NotificationChannel chan = new NotificationChannel(NOTIFICATION_CHANNEL_ID, channelName, NotificationManager.IMPORTANCE_NONE);
         chan.setLightColor(Color.BLUE);
-        chan.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+        chan.setLockscreenVisibility(Notification.VISIBILITY_PUBLIC); // Available to see on lock screen
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         assert manager != null;
@@ -133,7 +136,7 @@ public class TriggerCheckerService extends Service {
 
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID);
         Notification notification = notificationBuilder.setOngoing(true)
-                .setContentTitle("App is running in background")
+                .setContentTitle("Stocks are being monitored")
                 .setPriority(NotificationManager.IMPORTANCE_MIN)
                 .setCategory(Notification.CATEGORY_SERVICE)
                 .build();
@@ -146,34 +149,26 @@ public class TriggerCheckerService extends Service {
         super.onStartCommand(intent, flags, startId);
         triggerRepository = new TriggerRepository(getApplication());
         triggersChanged = true;
-        Log.i("START COMMAND", " started");
         startTimer();
         return START_STICKY;
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.i("Count", "ON DESTROY");
         stopTimerTask();
-
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("restartService");
         broadcastIntent.setClass(this, Restarter.class);
         this.sendBroadcast(broadcastIntent);
     }
 
-    private Timer timer;
-    private TimerTask timerTask;
     public void startTimer() {
-        Log.i("Count", "START TIMER");
         handler.removeCallbacks(runnable);
         handler.postDelayed(runnable , delay);
     }
 
     public void stopTimerTask() {
-        Log.i("Count", "STOPPING TIMER");
         handler.removeCallbacks(runnable);
         handler = null;
     }

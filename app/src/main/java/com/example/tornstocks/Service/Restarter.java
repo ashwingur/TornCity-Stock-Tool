@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class Restarter extends BroadcastReceiver {
+    // Received broadcast to restart the TriggerCheckerService because it has been closed
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.i("Broadcast Listened", "Service tried to stop");
