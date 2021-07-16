@@ -5,12 +5,15 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -37,6 +40,9 @@ public class TriggerListActivity extends AppCompatActivity {
 
     private ActivityResultLauncher<Intent> launcher;
 
+    private DialogInterface.OnClickListener dialogClickListener;
+    private int delete_index;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +55,7 @@ public class TriggerListActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_back);
 
         initLauncher();
+        initDialogClickListener();
         initRecycler();
         setUpObservers();
     }
@@ -71,6 +78,23 @@ public class TriggerListActivity extends AppCompatActivity {
                 launcher.launch(intent);
             }
         });
+
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                delete_index = viewHolder.getAdapterPosition();
+                Trigger t = mAdapter.getTrigger(delete_index);
+                AlertDialog.Builder builder = new AlertDialog.Builder(TriggerListActivity.this);
+                builder.setMessage(String.format("Delete %s trigger for %.2f?", t.getAcronym(), t.getTrigger_price()))
+                        .setPositiveButton("Yes", dialogClickListener)
+                        .setNegativeButton("No", dialogClickListener).show();
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 
     private void setUpObservers() {
@@ -98,6 +122,26 @@ public class TriggerListActivity extends AppCompatActivity {
                         TriggerRepository r = new TriggerRepository(getApplication());
                         Log.d(TAG, "onActivityResult: " + r.getAllTriggers().getValue());
                     }});
+    }
+
+    private void initDialogClickListener(){
+        dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        triggerListViewModel.delete(mAdapter.getTrigger(delete_index));
+                        Toast.makeText(TriggerListActivity.this, "Trigger deleted", Toast.LENGTH_SHORT).show();
+                        mAdapter.notifyItemRemoved(delete_index);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        // No button clicked
+                        mAdapter.notifyItemChanged(delete_index);
+                        break;
+                }
+            }
+        };
     }
 
 }

@@ -48,6 +48,8 @@ public class TriggerListAdapter extends RecyclerView.Adapter<TriggerListAdapter.
         notifyDataSetChanged();
     }
 
+    public Trigger getTrigger(int index) { return triggers.get(index); }
+
     public class TriggerHolder extends RecyclerView.ViewHolder {
 
         private TextView acronym, trigger_price, type;
