@@ -26,6 +26,7 @@ import android.widget.Toast;
 
 import com.example.tornstocks.Adapters.StockListAdapter;
 import com.example.tornstocks.Models.Stock;
+import com.example.tornstocks.Repositories.ApiKeyRepository;
 import com.example.tornstocks.Repositories.TriggerRepository;
 import com.example.tornstocks.Service.Restarter;
 import com.example.tornstocks.Service.TriggerCheckerService;
@@ -129,11 +130,11 @@ public class StockListActivity extends AppCompatActivity {
     }
 
     private void repeatStockQuery(){
-        stockListViewModel.queryStocks(Credentials.API_KEY);
+        stockListViewModel.queryStocks(ApiKeyRepository.getApiKey(this), this);
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                stockListViewModel.queryStocks(Credentials.API_KEY);
+                stockListViewModel.queryStocks(ApiKeyRepository.getApiKey(StockListActivity.this), StockListActivity.this);
                 handler.postDelayed(this, delay);
             }
         }, delay);

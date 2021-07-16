@@ -1,5 +1,8 @@
 package com.example.tornstocks.Repositories;
 
+import android.app.Activity;
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 
 import com.example.tornstocks.Models.Stock;
@@ -28,8 +31,8 @@ public class StockRepository {
 
     public LiveData<List<Stock>> getStocks(){ return stockApiClient.getStocks(); }
 
-    public void queryStocks(String key){
-        stockApiClient.queryStocks(key);
+    public void queryStocks(String key, Activity activity){
+        stockApiClient.queryStocks(key, activity);
     }
 
     public Stock getStockById(int stock_id){

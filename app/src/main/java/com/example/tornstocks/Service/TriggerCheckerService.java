@@ -24,6 +24,7 @@ import androidx.core.app.NotificationCompat;
 import com.example.tornstocks.Models.Stock;
 import com.example.tornstocks.Models.Trigger;
 import com.example.tornstocks.R;
+import com.example.tornstocks.Repositories.ApiKeyRepository;
 import com.example.tornstocks.Repositories.StockRepository;
 import com.example.tornstocks.Repositories.TriggerRepository;
 import com.example.tornstocks.StockListActivity;
@@ -55,7 +56,7 @@ public class TriggerCheckerService extends Service {
                 triggersChanged = false;
             }
             // Query the stocks API to get the latest stock data
-            StockRepository.getInstance().queryStocks(Credentials.API_KEY);
+            StockRepository.getInstance().queryStocks(ApiKeyRepository.getApiKey(TriggerCheckerService.this), null);
             currentStocks = StockRepository.getInstance().getStocks().getValue();
 
             // Check if a trigger has been reached, if it has then delete it and send a notification.

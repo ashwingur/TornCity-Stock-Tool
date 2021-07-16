@@ -1,5 +1,8 @@
 package com.example.tornstocks.ViewModels;
 
+import android.app.Activity;
+import android.content.Context;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModel;
 
@@ -18,7 +21,7 @@ public class StockListViewModel extends ViewModel {
 
     public LiveData<List<Stock>> getStocks(){ return stockRepository.getStocks(); }
 
-    public void queryStocks(String key){ stockRepository.queryStocks(key); }
+    public void queryStocks(String key, Activity activity){ stockRepository.queryStocks(key, activity); }
 
 
 }

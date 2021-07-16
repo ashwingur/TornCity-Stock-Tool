@@ -1,5 +1,7 @@
 package com.example.tornstocks.Requests;
 
+import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,16 +40,18 @@ public class StockApiClient {
 
     public LiveData<List<Stock>> getStocks(){ return mStocks; }
 
-    public void queryStocks(String key){
+    public void queryStocks(String key, Activity activity){
         ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(new RetriveStocksRunnable(key));
+        executor.execute(new RetriveStocksRunnable(key, activity));
     }
 
     private class RetriveStocksRunnable implements Runnable{
         private String key;
+        private Activity activity;
 
-        public RetriveStocksRunnable(String key){
+        public RetriveStocksRunnable(String key, Activity activity){
             this.key = key;
+            this.activity = activity;
         }
 
         @Override
@@ -60,12 +64,22 @@ public class StockApiClient {
                 if (response.code() == 200){
                     // Successful response
                     StockResponse sr = (StockResponse)response.body();
-                    if (sr.getStockMap() != null){
-                        // Successful retrieval
-                        List<Stock> list = new ArrayList<>(((StockResponse)response.body()).getStocks());
-                        mStocks.postValue(list);
+                    if (sr.getError() != null && activity != null) {
+                        Error error = sr.getError();
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(activity, String.format("Error %d: %s", error.getCode(), error.getWarning()), Toast.LENGTH_SHORT).show();
+                            }
+                        });
                     } else {
-                        Log.d(TAG, "run: Stock Map was null");
+                        if (sr.getStockMap() != null) {
+                            // Successful retrieval
+                            List<Stock> list = new ArrayList<>(((StockResponse) response.body()).getStocks());
+                            mStocks.postValue(list);
+                        } else {
+                            Log.d(TAG, "run: Stock Map was null");
+                        }
                     }
                 }
 
