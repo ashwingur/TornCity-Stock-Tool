@@ -69,7 +69,7 @@ public class StockApiClient {
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(activity, String.format("Error %d: %s", error.getCode(), error.getWarning()), Toast.LENGTH_SHORT).show();
+                                Toast.makeText(activity, String.format("[Torn Stock] Error %d: %s", error.getCode(), error.getWarning()), Toast.LENGTH_SHORT).show();
                             }
                         });
                     } else {

@@ -69,11 +69,13 @@ public class TriggerCheckerService extends Service {
                                         , String.format("%s is now above %.2f", t.getAcronym(), t.getTrigger_price())
                                         , new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 triggerRepository.delete(t);
+                                triggersChanged = true;
                             } else if (!t.isIs_above() && (s.getCurrent_price() <= t.getTrigger_price())){
                                 showNotification(TriggerCheckerService.this, "Torn Stocks"
                                         , String.format("%s is now below %.2f", t.getAcronym(), t.getTrigger_price())
                                         , new Intent(getApplicationContext(), StockListActivity.class),reqCodeCounter++);
                                 triggerRepository.delete(t);
+                                triggersChanged = true;
                             }
                             break;
                         }
