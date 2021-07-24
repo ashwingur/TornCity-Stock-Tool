@@ -8,5 +8,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="card_background">#F3F3F3</color>
+    <!--    Values for darkmode-->
+    <color name="card_background">#333333</color>
 </resources>

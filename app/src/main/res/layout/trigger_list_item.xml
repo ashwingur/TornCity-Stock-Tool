@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="#F3F3F3"
+    app:cardBackgroundColor="?attr/colorSurface"
     app:cardCornerRadius="8dp"
     android:layout_marginLeft="8dp"
     android:layout_marginTop="12dp"
@@ -23,7 +23,6 @@
             android:fontFamily="serif"
             android:text="$0.00"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:textColor="#000000"
             android:textSize="34sp" />
 
         <TextView
@@ -46,4 +45,4 @@
             />
     </RelativeLayout>
 
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
